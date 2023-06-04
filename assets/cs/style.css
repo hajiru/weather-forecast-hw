@@ -1,0 +1,11 @@
+.cloudyBackground {
+  background-image: url("/assets/images/aesthetic-cloud-background.jpg")
+}
+
+#mainCard {
+  width: 74.6%;
+}
+
+.card {
+  opacity: 0.6;
+}
