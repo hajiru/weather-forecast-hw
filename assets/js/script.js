@@ -86,4 +86,84 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       });
   }
+
+    // Adds dates to cards
+    function todaysDates() {
+      for (var i = 0; i <= 5; i++) {
+        var dates = document.querySelector("#date" + i);
+        dates.textContent = dayjs().add(i, "d").format("M/DD/YYYY");
+      }
+    }
+  
+    // Checks to see if city has been searched, if not it w ill add it to search history and stores in local storage
+    function searchHist(cityName) {
+      var name = cityName;
+  
+      if (cities.includes(name)) {
+          return
+      } else {
+        cities.push(name);
+        localStorage.setItem("Cities", JSON.stringify(cities));
+        renderHistory(name);
+      }
+    }
+  
+    // Grabs innertext from button and will be re-displayed to screen
+    function historyButtonListner(event) {
+      var inputEl = event.target.innerText;
+  
+      cityName = inputEl;
+  
+      titleName.textContent = cityName + " " + dayjs().format("(M/DD/YYYY)");
+      var newCityName = cityName.replace(/\s/g, "");
+  
+      var apiSearch =
+        "https://api.openweathermap.org/geo/1.0/direct?q=" +
+        newCityName +
+        "&limit=1&appid=31fbadef98a417ef6f0e39d36c133d27";
+  
+      cityLookup(apiSearch);
+    }
+  
+    function init() {
+      var storedCities = JSON.parse(localStorage.getItem("Cities")) || [];
+      if (storedCities !== null) {
+        cities = storedCities;
+        for (var i = 0; i < cities.length; i++) {
+          renderHistory(cities[i]);
+        }
+      }
+    }
+  
+    // Creates a button and attaches to history container for every city name that is passed
+    function renderHistory(name) {
+      var cityName = name;
+      var li = document.createElement("li");
+      var button = document.createElement("button");
+  
+      button.classList.add("btns");
+      button.classList.add("btn-secondary");
+      button.style.width = "310px";
+      button.style.border = "solid black";
+      li.style.padding = "5px";
+      li.style.marginRight = "45px";
+      button.type = "button";
+      li.textContent = "";
+      li.style.listStyleType = "none";
+      button.textContent = "" + cityName;
+  
+      li.appendChild(button);
+      searchHistory.appendChild(li);
+      button.addEventListener("click", historyButtonListner);
+    }
+  
+    // Renders on dates and search history on page load
+    todaysDates();
+    init();
+  
+    function clearHistory() {
+      localStorage.clear();
+      cities = [];
+      searchHistory.innerHTML = "";
+    }
 });
